@@ -1,16 +1,18 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { Carousel } from "react-responsive-carousel";
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+import config from "./Config.json";
+import "./App.css";
 
 // Header Component
-const Header = () => {
+const Header = ({ companyName, companyLogo }) => {
   return (
     <header className="bg-black text-white shadow-md">
       <div className="container mx-auto flex justify-between items-center py-4 px-6">
         {/* Logo */}
         <div className="flex items-center gap-4">
-          <img src="./path-to-logo-black.png" alt="Logo" className="h-12" />
-          <h1 className="text-xl font-bold text-blue-500">
-            Hazara Travel Solutions
-          </h1>
+          <img src={companyLogo} alt="Logo" className="h-12" />
+          <h1 className="text-xl font-bold text-blue-500">{companyName}</h1>
         </div>
         {/* Navigation */}
         <nav className="hidden md:flex gap-8 text-base font-medium">
@@ -38,7 +40,6 @@ const Header = () => {
           >
             Tourist Bus
           </a>
-
           <a
             href="#contact"
             className="hover:text-blue-500 transition duration-200"
@@ -71,11 +72,17 @@ const Header = () => {
 };
 
 // Hero Section
-const HeroSection = () => {
+const HeroSection = ({ carouselImages }) => {
   return (
     <section
+      id="HeroSection"
       className="relative h-screen bg-cover bg-center flex items-center justify-center text-white"
-      style={{ backgroundImage: `url('../public/hero.jpg')` }}
+      style={{
+        backgroundImage: `url('/hero.jpg')`,
+
+        height: "100vh",
+        width: "100%",
+      }}
     >
       <div className="absolute inset-0 bg-black bg-opacity-50"></div>
       <div className="relative text-center">
@@ -86,17 +93,32 @@ const HeroSection = () => {
           Discover hidden gems and make unforgettable memories with us.
         </p>
         <button className="bg-blue-500 px-6 py-3 text-lg rounded-lg shadow-lg hover:bg-blue-600 transition duration-300">
-          Get Started
+          Get Starteddd
         </button>
+        <div className="mt-8">
+          <Carousel
+            showThumbs={false}
+            autoPlay
+            infiniteLoop
+            showStatus={false}
+            className="rounded-lg shadow-lg"
+          >
+            {Object.values(carouselImages).map((image, index) => (
+              <div key={index}>
+                <img src={image} alt={`Slide ${index + 1}`} />
+              </div>
+            ))}
+          </Carousel>
+        </div>
       </div>
     </section>
   );
 };
 
 // Info Section
-const InfoSection = () => {
+const InfoSection = ({ companyAddress }) => {
   return (
-    <section className="container mx-auto px-6 py-16">
+    <section className="container mx-auto px-6 py-16" id="InfoSection">
       <div className="bg-white text-black p-8 rounded-lg shadow-lg flex flex-col md:flex-row items-center">
         <div className="md:w-1/2">
           <h3 className="text-2xl md:text-4xl font-bold text-blue-500 mb-4">
@@ -114,11 +136,7 @@ const InfoSection = () => {
           </button>
         </div>
         <div className="md:w-1/2 mt-8 md:mt-0">
-          <img
-            src="../public/map-placeholder.jpg"
-            alt="Map"
-            className="w-full h-auto"
-          />
+          <img src="/map-placeholder.jpg" alt="Map" className="w-full h-auto" />
         </div>
       </div>
     </section>
@@ -154,16 +172,38 @@ const ServicesSection = () => {
   );
 };
 
+// Tour Places Section
+const TourPlacesSection = ({ tourPlaces }) => {
+  return (
+    <section id="tour-places" className="container mx-auto px-6 py-16">
+      <h3 className="text-3xl font-semibold text-blue-500 mb-6">
+        Places We Cover
+      </h3>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {tourPlaces.map((place, index) => (
+          <div
+            key={index}
+            className="bg-gray-800 p-6 rounded-lg shadow-lg hover:scale-105 transition-transform duration-300"
+          >
+            <h4 className="text-xl font-bold text-blue-400 mb-4">{place}</h4>
+            <p>
+              Explore the beauty of {place} with our exclusive tour packages.
+            </p>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+};
+
 // Footer Component
-const Footer = () => {
+const Footer = ({ companyName, companyAddress, companyMail }) => {
   return (
     <footer className="bg-gray-900 text-white py-10 px-6">
       <div className="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Left Section */}
         <div>
-          <h3 className="text-2xl font-bold text-blue-400">
-            Hazara Travel Solutions
-          </h3>
+          <h3 className="text-2xl font-bold text-blue-400">{companyName}</h3>
           <p className="mt-2 text-gray-400">
             Travel beyond your imagination, with our Travel Agency!
           </p>
@@ -189,10 +229,7 @@ const Footer = () => {
           <h3 className="text-lg font-semibold text-blue-400">
             Corporate Office Address
           </h3>
-          <p className="text-gray-400 mt-2">
-            Second Floor, Nagammai Building, Dr. Nanjappa Road, Near Park Gate
-            Roundana, Coimbatore, Tamil Nadu 641018
-          </p>
+          <p className="text-gray-400 mt-2">{companyAddress}</p>
         </div>
 
         {/* Right Section */}
@@ -200,10 +237,10 @@ const Footer = () => {
           <h3 className="text-lg font-semibold text-blue-400">Contact</h3>
           <p className="text-gray-400 mt-2">
             <a
-              href="mailto:info@aspireholidays.in"
+              href={`mailto:${companyMail}`}
               className="bg-orange-500 px-4 py-2 rounded-lg hover:bg-orange-600 transition"
             >
-              info@aspireholidays.in
+              {companyMail}
             </a>
           </p>
           <p className="text-gray-400 mt-2">📞 +91 9362266666</p>
@@ -214,22 +251,40 @@ const Footer = () => {
       {/* Bottom Section */}
       <div className="text-center text-gray-500 mt-8">
         <p>
-          &copy; {new Date().getFullYear()} Hazara Travel Solutions. All Rights
-          Reserved.
+          &copy; {new Date().getFullYear()} {companyName}. All Rights Reserved.
         </p>
       </div>
     </footer>
   );
 };
+
 // Home Page Component
 const HomePage = () => {
+  const [configData, setConfigData] = useState(null);
+
+  useEffect(() => {
+    setConfigData(config);
+  }, []);
+
+  if (!configData) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="bg-gradient-to-b from-black via-gray-900 to-blue-900 min-h-screen text-white">
-      <Header />
-      <HeroSection />
-      <InfoSection />
+      <Header
+        companyName={configData.company_name}
+        companyLogo={configData.company_logo}
+      />
+      <HeroSection carouselImages={configData.carousel_images} />
+      <InfoSection companyAddress={configData.company_address} />
       <ServicesSection />
-      <Footer />
+      <TourPlacesSection tourPlaces={configData.tour_places} />
+      <Footer
+        companyName={configData.company_name}
+        companyAddress={configData.company_address}
+        companyMail={configData.company_mail}
+      />
     </div>
   );
 };

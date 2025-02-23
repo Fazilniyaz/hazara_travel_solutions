@@ -1,0 +1,17 @@
+{
+  "company_name": "Hazara Travel Solutions",
+  "company_logo": "./path-to-logo-black.png",
+  "company_address": "Second Floor, Nagammai Building, Dr. Nanjappa Road, Near Park Gate Roundana, Coimbatore, Tamil Nadu 641018",
+  "company_mail": "info@aspireholidays.in",
+  "carousel_images": {
+    "image1": "/hero.jpg",
+    "image2": "/carousel-image2.jpg",
+    "image3": "/carousel-image3.jpg"
+  },
+  "tour_places": [
+    "Varkala",
+    "Kollam",
+    "Alapuzha",
+    "Coorg"
+  ]
+}
